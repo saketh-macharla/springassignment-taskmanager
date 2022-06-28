@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <title>Home</title>
+    <link th:href="@{css/style.css}" rel="stylesheet" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        li{
+            margin:0 3px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="color:white">
+    <a class="navbar-brand" href="#">Task Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav header">
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/task/create">Create Task</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" href="/users">Users</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" href="/assignment">Assign Tasks</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" href="/tasks">Tasks List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">LogOut</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div style="margin-left:10px">
+    <h1 >HI!, <span th:text= "${#strings.capitalize(username)}"></span></h1>
+    <h2>Assigned Tasks</h2>
+    <br>
+    <table class="task-table table  table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th style="white-space: nowrap">Task Name</th>
+            <th style="white-space: nowrap">Description</th>
+            <th style="white-space: nowrap">Last Date</th>
+            <th style="white-space: nowrap">Assigned To</th>
+            <th style="white-space: nowrap">Creator Name</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task:${allTasks}"
+            th:with="isThisOneSigned=${task.creatorName!=null ? task.creatorName.equals(username) : false}"
+        >
+
+            <td class="text-left" th:text="${task.name}"></td>
+            <td class="text-left d-none d-sm-table-cell" th:text="${task.description}"></td>
+
+            <td class="text-left"  style="white-space: nowrap" th:text="${task.date}"></td>
+            <td class="text-left"  th:text="${task.owner.username}"></td>
+            <td class="text-left"  th:text="${task.creatorName}"></td>
+
+            <td style="padding-left:2%">
+
+                <a  th:href="${task.completed} ? ${'task/unmark/'+task.id} : ${'task/mark/'+task.id} ">
+                <i th:class="${task.completed} ? ' fa fa-check-square-o':'fa fa-square-o'"></i>
+                </a>
+<!--                <span th:text= "${isThisOneSigned + task.creatorName + username}"></span>-->
+            </td>
+            <td style="white-space: nowrap">
+
+                <div style="display: inline-block" th:if="${isAdminSigned or isThisOneSigned}">
+                    <a  th:href="${'task/edit/'+task.id}" class="btn btn-outline-success">
+                        Edit</a>
+                </div>
+
+                <div style="display: inline-block" th:unless="${isAdminSigned or isThisOneSigned}" >
+                    <span data-toggle="tooltip" data-placement="top" data-html="true"
+                          title="Only task owner or admin can edit this task">
+                        <a href="" class="btn btn-outline-secondary" disabled>Edit</a>
+                    </span>
+                </div>
+
+                |
+
+                <div style="display: inline-block" th:if="${isAdminSigned or isThisOneSigned}">
+                    <a  th:href="${'task/delete/'+task.id}" class="btn btn-danger"
+                        onclick="if(!(confirm('Are you sure you want to delete this task?'))) return false">
+                    Delete</a>
+                </div>
+
+                <div style="display: inline-block" th:unless="${isAdminSigned or isThisOneSigned}" >
+                    <span data-toggle="tooltip" data-placement="top" data-html="true"
+                            title="Only task owner or admin can delete this task">
+                        <a href="" class="btn btn-danger" disabled>Delete</a>
+                    </span>
+                </div>
+            </td>
+
+        </tr>
+
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
