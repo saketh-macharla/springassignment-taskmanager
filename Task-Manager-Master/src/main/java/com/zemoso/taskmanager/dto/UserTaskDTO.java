@@ -1,0 +1,19 @@
+package com.zemoso.taskmanager.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserTaskDTO {
+    String userName;
+    List<TaskDTO> taskDTOListInProgress;
+    List<TaskDTO> taskDTOListCompleted;
+    boolean isAdmin;
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="eng"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Assign Tasks</title>
+    <link th:href="@{css/style.css}" rel="stylesheet" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        li{
+            margin:0 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="color:white">
+        <a class="navbar-brand" href="#">Task Manager</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav header">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/task/create">Create Task</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" href="/users">Users</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" href="/assignment">Assign Tasks</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="nav-link" href="/tasks">Tasks List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">LogOut</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h1 class="my-highest-header">Assign tasks to user</h1>
+        </div>
+        <!--Users--------------------------------------->
+        <div class="card-body">
+
+            <h2 class="my-second-header">Choose user</h2>
+
+            <div class="card-deck">
+                <div th:each="user:${users}" class="col-12 col-sm-3">
+
+                    <a th:href="${'/assignment/' + user.userName}" class="btn text-left" style="text-align:left">
+
+
+                        <div class="card mb-3"
+                             th:classappend="${selectedUser!=null and selectedUser==user.userName} ?'my-button-selected'">
+
+                                <div class="col-7" style="width:100%; padding:1%">
+                                    <div th:text="${user.userName}"></div>
+                                    <small>tasks in progress:</small>
+                                    <div th:if="${user.getTaskDTOListInProgress().size() gt 0}"
+                                         th:text="${user.getTaskDTOListInProgress().size()}">
+                                    </div>
+                                    <div th:if="${user.getTaskDTOListInProgress().size()==0}">0</div>
+                                </div>
+
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!--This section is displayed only if user is selected-->
+            <h2 class="my-second-header" th:if="${selectedUser==null}">No user is selected</h2>
+            <h2 class="my-second-header" th:unless="${selectedUser==null}">
+                <span class="text-success"
+                      th:text="${selectedUser +' is selected'}">
+                </span>
+            </h2>
+
+            <hr class="my-4">
+
+            <!--This section is displayed only if user is selected-->
+            <div class="row" th:if="${selectedUser!=null}">
+
+                <!--left card with TASKS assigned to selected user, ---->
+                <div class="col-sm-6 col-12">
+                    <div class="card mr-2">
+                        <div class="card-header">
+                            <h2 class="my-second-header"
+                                th:text="'Tasks in Progress ('+${selectedUser}+' is working on them)'"
+                            ></h2>
+                        </div>
+                        <table class="table table-hover text-left">
+                            <thead class="table-info">
+                            <tr>
+                                <th class="col-sm-6">Task name</th>
+                                <th class="col-sm-2">Action</th>
+                            </tr>
+                            </thead>
+
+                            <!--left table content when user has some tasks in progress-->
+                            <tbody th:if="${selectedUserTasksInProgress.size() gt 0}">
+                            <tr th:each="task:${selectedUserTasksInProgress}">
+
+                                <!--Task in progress name-->
+                                <td th:text="${task.name}"></td>
+
+                                <!--Unassign button-->
+                                <td>
+                                    <a th:href="${'/assignment/unassign/' + selectedUser+'/'+task.id}"
+                                       class="btn btn-outline-success btn-sm mb-2"
+                                    >Unassign</a>
+                                </td>
+
+                            </tr>
+                            </tbody>
+
+                            <!--left table content when user has no task in progress-->
+                            <tbody th:if="${selectedUserTasksInProgress.size() eq 0}">
+                            <tr>
+                                <td th:text="${'There are no tasks assigned to '+selectedUser}"></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+                <!--right card with all free TASKS, 1/2 width--------------------------------------->
+                <div class="col-sm-6 col-12">
+                    <div class="card ml-2">
+                        <div class="card-header">
+                            <h2 class="my-second-header"
+                                th:text="'Free Tasks (assign them to '+${selectedUser}+')'"
+                            ></h2>
+                        </div>
+
+                        <table class="my-tab table table-hover text-left">
+
+                            <thead class="table-secondary">
+                            <tr>
+                                <th class="col-sm-6">Task name</th>
+                                <th class="col-sm-2">Action</th>
+                            </tr>
+                            </thead>
+
+                            <!--right table content there are some free tasks-->
+                            <tbody>
+                            <tr th:each="ft:${freeTasks}" th:unless="${freeTasks.size()==0}">
+
+                                <!--Free task name-->
+                                <td th:text="${ft.name}"></td>
+
+
+                                <!--Assign button-->
+                                <td>
+                                    <a th:href="${'/assignment/assign/' + selectedUser+'/'+ft.id}"
+                                       class="btn btn-outline-success btn-sm mb-2"
+                                    >Assign</a>
+                                </td>
+                            </tr>
+
+                            <!--right table content there are some free tasks-->
+                            <tr th:if="${freeTasks.size()==0}">
+                                <td>There are no tasks to assign</td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</main>
+
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <title>Users List</title>
+    <link th:href="@{css/style.css}" rel="stylesheet" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        li{
+            margin:0 3px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="color:white">
+    <a class="navbar-brand" href="#">Task Manager</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav header">
+            <li class="nav-item active">
+                <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/task/create">Create Task</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" href="/users">Users</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" href="/assignment">Assign Tasks</a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="nav-link" href="/tasks">Tasks List</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">LogOut</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div style="margin-left:10px">
+    <h1>Users List</h1>
+    <br>
+    <table class="task-table table  table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>UserName</th>
+            <th>Task in Progress</th>
+            <th>Task Completed</th>
+            <th th:if="${isAdminSigned}">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user:${users}"
+        >
+            <!--Tasks in  progress-->
+            <td class="text-left" th:text="${user.userName}"></td>
+
+            <td th:if="${user.getTaskDTOListInProgress().size() gt 0}">
+                <ol>
+                    <li th:each="t: ${user.getTaskDTOListInProgress()}">
+                        <span th:text="${t.name}"></span>
+                    </li>
+                </ol>
+            </td>
+            <td th:if="${user.getTaskDTOListInProgress().size() == 0}">0</td>
+
+            <!--Tasks completed-->
+            <td th:if="${user.getTaskDTOListCompleted().size() gt 0}" class="d-none d-md-table-cell">
+                <ol class="pl-3">
+                    <li th:each="t : ${user.getTaskDTOListCompleted()}">
+                        <span th:text="${t.name}"></span>
+                    </li>
+                </ol>
+            </td>
+            <td th:if="${user.getTaskDTOListCompleted().size()==0}" class="d-none d-md-table-cell">0</td>
+
+            <!--Delete button-->
+
+            <td th:if="${isAdminSigned and !user.isAdmin}" style="white-space: nowrap">
+                    <a  th:href="${'/user/delete/' + user.userName}" class="btn btn-danger"
+                        onclick="if(!(confirm('After this action, the tasks will be retained, but without the owner.?'))) return false">
+<!--                        <span th:text="${isAdminSigned}"></span><span th:text="${!user.isAdmin()}"></span>-->
+                        Delete</a>
+            </td>
+            <td th:if="${isAdminSigned and user.isAdmin()}"></td>
+
+
+        </tr>
+
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

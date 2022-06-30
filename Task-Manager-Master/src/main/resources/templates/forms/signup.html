@@ -1,0 +1,97 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Sign Up Page</title>
+    <link th:href="@{css/style.css}" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div
+      id="loginbox"
+      style="margin-top: 50px"
+      class="mainbox col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2"
+    >
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panel-title">Sign Up</div>
+        </div>
+
+        <br />
+        <div style="padding-top: 30px" class="panel-body">
+          <form th:action="@{/saveUser}" method="POST" th:object="${user}">
+            <div th:if="${param.error!=null}">
+              <i class="error">Sorry! You entered invalid username/password</i
+              ><br /><br />
+            </div>
+            <div class="form_group">
+              <div class="input-group mb-3">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-user"></i
+                ></span>
+                <input
+                  th:field="*{username}"
+                  type="text"
+                  class="form-control"
+                  placeholder="username"
+                />
+              </div>
+              <div class="input-group mb-3">
+                <input
+                  th:field="*{email}"
+                  type="email"
+                  class="form-control"
+                  placeholder="email"
+                />
+              </div>
+              <div class="input-group mb-3">
+                <input
+                        th:field="*{name}"
+                        type="text"
+                        class="form-control"
+                        placeholder="name"
+                />
+              </div>
+              <div class="input-group mb-3">
+                <input
+                  th:field="*{phone}"
+                  type="text"
+                  class="form-control"
+                  placeholder="phone"
+                />
+              </div>
+              <div class="input-group mb-3">
+                <span class="input-group-addon"
+                  ><i class="glyphicon glyphicon-lock"></i
+                ></span>
+                <input
+                  th:field="*{password}"
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  aria-label="Password"
+                  aria-describedby="Password"
+                />
+              </div>
+
+              <div class="btngroup">
+                <button type="submit">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
