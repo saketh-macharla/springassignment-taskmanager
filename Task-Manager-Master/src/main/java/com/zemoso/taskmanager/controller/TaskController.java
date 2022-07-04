@@ -87,7 +87,7 @@ public class TaskController {
         return "redirect:/home";
     }
 
-    @GetMapping("/task/delete/{id}")
+    @DeleteMapping("/task/delete/{id}")
     public String deleteTask(@PathVariable int id) {
         taskService.deleteTask(id);
         return "redirect:/home";
@@ -99,7 +99,7 @@ public class TaskController {
         return "forms/task-edit";
     }
 
-    @PostMapping("/task/edit")
+    @PutMapping("/task/edit")
     public String updateTask(@Valid @ModelAttribute("task") TaskDTO taskDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "forms/task-edit";

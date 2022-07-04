@@ -4,15 +4,20 @@ import com.zemoso.taskmanager.entity.Roles;
 import com.zemoso.taskmanager.repository.UserRepository;
 import com.zemoso.taskmanager.entity.Task;
 import com.zemoso.taskmanager.entity.Users;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements  UserService {
+
+    private Logger myLogger = Logger.getLogger(getClass().getName());
     @Autowired
     UserRepository userRepository;
 
@@ -21,10 +26,6 @@ public class UserServiceImpl implements  UserService {
         return userRepository.save(user);
     }
 
-    @Override
-    public Users changeRoleToAdmin(Users user) {
-        return null;
-    }
 
     @Override
     public List<Users> findAll() {
@@ -33,32 +34,36 @@ public class UserServiceImpl implements  UserService {
 
     @Override
     public void deleteUser(String username) {
-        Optional<Users> user = userRepository.findById(username);
+        Optional<Users> user =  userRepository.findById(username);
         Users temp =null;
-        if(user.isPresent()){
-            temp=user.get();
+        if(user.isPresent()) {
+            temp = user.get();
+            if(temp.getTasksOwned()!= null && temp.getTasksOwned().size()>0){
+                temp.getTasksOwned().forEach(task -> {
+                    task.setOwner(null);
+                    task.setCompleted(false);
+                });
+            }
+            userRepository.deleteById(username);
         }
-        temp.getTasksOwned().forEach(task -> task.setOwner(null));
-        userRepository.deleteById(username);
     }
 
     @Override
     public List<Task> findAllTasks(String username) {
         Optional<Users> user= userRepository.findById(username);
         Users tempUser = null;
-        if(user.isPresent()){
-            tempUser=user.get();
+        if(user.isPresent()) {
+            tempUser = user.get();
+            myLogger.info( tempUser.getTasksOwned().toString());
+            return tempUser.getTasksOwned();
         }
-        System.out.println(tempUser.getTasksOwned());
-         return tempUser.getTasksOwned();
-
-
+        return null;
     }
 
     @Override
     public Users  getUserByUsername(String username) {
         Optional<Users> user= userRepository.findById(username);
-        System.out.println(user);
+        myLogger.info(user.toString());
         if(user.isPresent())
             return user.get();
         return null;

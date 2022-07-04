@@ -1,5 +1,6 @@
 package com.zemoso.taskmanager.controller;
 
+import com.zemoso.taskmanager.dto.TaskDTO;
 import com.zemoso.taskmanager.dto.UserTaskDTO;
 import com.zemoso.taskmanager.entity.Task;
 import com.zemoso.taskmanager.entity.Users;
@@ -61,10 +62,14 @@ public class AssignmentController {
             userTaskDTO.setAdmin(userService.isAdmin(user));
             userTaskDTOList.add(userTaskDTO);
         }
+        List<Task> freeTasks = taskService.findFreeTasks();
+        List<TaskDTO> freeTasksDTO = taskMapper.taskListToTaskDTOList(taskService.findFreeTasks());
         theModel.addAttribute("users", userTaskDTOList);
         theModel.addAttribute("freeTasks", taskMapper.taskListToTaskDTOList(taskService.findFreeTasks()));
         theModel.addAttribute("selectedUser",selectedUser);
-        theModel.addAttribute("selectedUserTasksInProgress", taskMapper.taskListToTaskDTOList(userService.getTasksInProgress(User)));
+        theModel.addAttribute("selectedUserTasksInProgress", freeTasksDTO);
+        System.out.println("free tasks "+freeTasks.size());
+        System.out.println("free tasksDTO "+freeTasksDTO.size());
         return "forms/assignment";
     }
 

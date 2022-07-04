@@ -35,22 +35,24 @@ public class TaskServiceImpl implements TaskService{
     public void markDone(int id) {
          Optional<Task> task= taskRepository.findById(id);
          Task tempTask = null;
-         if(task.isPresent()){
-             tempTask=task.get();
+         if(task.isPresent()) {
+             tempTask = task.get();
+
+             tempTask.setCompleted(true);
+             taskRepository.save(tempTask);
          }
-         tempTask.setCompleted(true);
-         taskRepository.save(tempTask);
     }
 
     @Override
     public void markUnDone(int id) {
         Optional<Task> task= taskRepository.findById(id);
         Task tempTask = null;
-        if(task.isPresent()){
-            tempTask=task.get();
+        if(task.isPresent()) {
+            tempTask = task.get();
+
+            tempTask.setCompleted(false);
+            taskRepository.save(tempTask);
         }
-        tempTask.setCompleted(false);
-        taskRepository.save(tempTask);
     }
 
     @Override

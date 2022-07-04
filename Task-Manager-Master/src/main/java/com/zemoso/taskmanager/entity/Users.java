@@ -1,19 +1,18 @@
 package com.zemoso.taskmanager.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Users {
@@ -62,22 +61,6 @@ public class Users {
         tasksOwned.add(task);
     }
 
-//    public List<Task> getTasksCompleted() {
-//        return tasksOwned.stream()
-//                .filter(Task::isCompleted)
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<Task> getTasksInProgress(){
-//        return tasksOwned.stream()
-//                .filter(task -> !task.isCompleted())
-//                .collect(Collectors.toList());
-//    }
-//
-//    public boolean isAdmin() {
-//        String roleName = "ROLE_ADMIN";
-//        return roles.stream().map(Roles::getAuthority).allMatch(roleName::equals);
-//    }
 
     public String toString(){
         return "["+userId+","+username+","+name+","+email+","+phone+","+password+"]";

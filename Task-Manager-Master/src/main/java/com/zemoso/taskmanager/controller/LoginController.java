@@ -51,6 +51,7 @@ public class LoginController {
         Users user = userMapper.userDTOToUser(userDTO);
         Roles role=new Roles("ROLE_EMPLOYEE");
         user.addRole(role);
+        user.setUserId(0);
         userService.createUser(user);
 
         return "redirect:/login";
