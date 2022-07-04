@@ -67,7 +67,7 @@ public class AssignmentController {
         theModel.addAttribute("users", userTaskDTOList);
         theModel.addAttribute("freeTasks", taskMapper.taskListToTaskDTOList(taskService.findFreeTasks()));
         theModel.addAttribute("selectedUser",selectedUser);
-        theModel.addAttribute("selectedUserTasksInProgress", freeTasksDTO);
+        theModel.addAttribute("selectedUserTasksInProgress", taskMapper.taskListToTaskDTOList(userService.getTasksInProgress(User)));
         System.out.println("free tasks "+freeTasks.size());
         System.out.println("free tasksDTO "+freeTasksDTO.size());
         return "forms/assignment";

@@ -1,7 +1,6 @@
 package com.zemoso.taskmanager.controller;
 
 import com.zemoso.taskmanager.dto.TaskDTO;
-import com.zemoso.taskmanager.dto.UserDTO;
 import com.zemoso.taskmanager.entity.Task;
 import com.zemoso.taskmanager.entity.Users;
 import com.zemoso.taskmanager.mapper.TaskMapper;
@@ -87,7 +86,7 @@ public class TaskController {
         return "redirect:/home";
     }
 
-    @DeleteMapping("/task/delete/{id}")
+    @GetMapping("/task/delete/{id}")
     public String deleteTask(@PathVariable int id) {
         taskService.deleteTask(id);
         return "redirect:/home";
@@ -99,7 +98,7 @@ public class TaskController {
         return "forms/task-edit";
     }
 
-    @PutMapping("/task/edit")
+    @PostMapping("/task/edit")
     public String updateTask(@Valid @ModelAttribute("task") TaskDTO taskDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "forms/task-edit";

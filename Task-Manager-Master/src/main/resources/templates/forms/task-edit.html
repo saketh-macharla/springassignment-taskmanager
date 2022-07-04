@@ -71,10 +71,11 @@
         <h1 class="my-highest-header card-header">Edit Task</h1>
 
         <div class="card card-body">
-            <form th:action="@{/task/edit}" th:object="${task}" method="put">
+            <form th:action="@{/task/edit}" th:object="${task}" method="post">
                 <input type="hidden" th:field="*{id}"/>
                 <input type="hidden" th:field="*{creatorName}"/>
                 <input type="hidden" th:field="*{owner}"/>
+                <input type="hidden" th:field="*{completed}"/>
 
                 <!--name-->
                 <div class="form-group">
