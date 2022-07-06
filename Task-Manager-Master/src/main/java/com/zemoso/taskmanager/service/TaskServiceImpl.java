@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,20 +16,24 @@ public class TaskServiceImpl implements TaskService{
     @Autowired
     TaskRepository taskRepository;
 
+    private Logger myLogger = Logger.getLogger(getClass().getName());
 
     @Override
     public void createTask(Task task) {
         taskRepository.save(task);
+        myLogger.info("A new Task is created by: "+ task.getOwner().getUsername());
     }
 
     @Override
     public void updateTask(Task task) {
         taskRepository.save(task);
+        myLogger.info("Updated task details of task with id: "+task.getId());
     }
 
     @Override
     public void deleteTask(int id) {
         taskRepository.deleteById(id);
+        myLogger.info("Deleted task with id: "+ id);
     }
 
     @Override
@@ -40,6 +45,7 @@ public class TaskServiceImpl implements TaskService{
 
              tempTask.setCompleted(true);
              taskRepository.save(tempTask);
+             myLogger.info("Task with id: "+ id + " is marked done");
          }
     }
 
@@ -52,6 +58,7 @@ public class TaskServiceImpl implements TaskService{
 
             tempTask.setCompleted(false);
             taskRepository.save(tempTask);
+            myLogger.info("Task with id: "+ id + " is marked undone");
         }
     }
 
@@ -69,14 +76,17 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public void unassignTask(Task selectedTask) {
+       Users user = selectedTask.getOwner();
             selectedTask.setOwner(null);
             taskRepository.save(selectedTask);
+        myLogger.info("Unassigned a Task with id: "+selectedTask.getId() +" from  User: "+ user.getUsername());
     }
 
     @Override
     public void assignTask(Task selectedTask, Users selectedUser) {
         selectedTask.setOwner(selectedUser);
         taskRepository.save(selectedTask);
+        myLogger.info("Assigned a Task with id: "+selectedTask.getId() +" to  User: "+ selectedUser.getUsername());
     }
 
     @Override

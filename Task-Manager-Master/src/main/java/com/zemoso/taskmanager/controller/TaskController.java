@@ -55,7 +55,7 @@ public class TaskController {
     }
 
     @GetMapping("task/mark/{taskId}")
-    public String markTaskAsDone(@PathVariable("taskId") int taskId){
+    public String markTaskAsDone(@PathVariable("taskId") int taskId ){
         taskService.markDone(taskId);
         return "redirect:/home";
     }

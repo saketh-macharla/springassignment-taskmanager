@@ -100,13 +100,13 @@
 
                 <div style="display: inline-block" th:if="${isAdminSigned == true}">
                     <a  th:href="${'task/edit/'+task.id}" class="btn btn-outline-success">
-                        Edit</a>
+                        Edit Details</a>
                 </div>
 
                 <div style="display: inline-block" th:unless="${isAdminSigned == true}" >
                     <span data-toggle="tooltip" data-placement="top" data-html="true"
                           title="Only task owner or admin can edit this task">
-                        <a href="" class="btn btn-outline-secondary" disabled>Edit</a>
+                        <a href="" class="btn btn-outline-secondary" disabled>Edit Details</a>
                     </span>
                 </div>
 
