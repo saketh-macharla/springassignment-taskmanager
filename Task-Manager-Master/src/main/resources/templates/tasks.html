@@ -91,7 +91,7 @@
 
             <td style="padding-left:2%">
 
-                <a  th:href="${task.completed} ? ${'task/unmark/'+task.id} : ${'task/mark/'+task.id} ">
+                <a  th:href="${task.completed} ? ${'task/unmark/'+task.id+'?isHome=False'} : ${'task/mark/'+task.id+'?isHome=False'} ">
                     <i th:class="${task.completed} ? ' fa fa-check-square-o':'fa fa-square-o'"></i>
                 </a>
                 <!--                <span th:text= "${isThisOneSigned + task.creatorName + username}"></span>-->
@@ -99,7 +99,7 @@
             <td style="white-space: nowrap">
 
                 <div style="display: inline-block" th:if="${isAdminSigned == true}">
-                    <a  th:href="${'task/edit/'+task.id}" class="btn btn-outline-success">
+                    <a  th:href="${'task/edit/'+task.id+'?isHome=False'}"class="btn btn-outline-success">
                         Edit Details</a>
                 </div>
 
@@ -113,7 +113,7 @@
                 |
 
                 <div style="display: inline-block" th:if="${isAdminSigned == true}">
-                    <a  th:href="${'task/delete/'+task.id}" class="btn btn-danger"
+                    <a  th:href="${'task/delete/'+task.id+'?isHome=False'}" class="btn btn-danger"
                         onclick="if(!(confirm('Are you sure you want to delete this task?'))) return false">
                         Delete</a>
                 </div>

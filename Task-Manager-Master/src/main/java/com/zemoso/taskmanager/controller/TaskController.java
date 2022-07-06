@@ -51,19 +51,29 @@ public class TaskController {
 
         model.addAttribute("allTasks", taskMapper.taskListToTaskDTOList(taskService.findAll()));
         model.addAttribute("isAdminSigned", isAdminSigned);
+        model.addAttribute("isHome","False");
         return "tasks";
     }
 
     @GetMapping("task/mark/{taskId}")
-    public String markTaskAsDone(@PathVariable("taskId") int taskId ){
+    public String markTaskAsDone(@PathVariable("taskId") int taskId, @RequestParam String isHome){
         taskService.markDone(taskId);
-        return "redirect:/home";
+        if(isHome.equalsIgnoreCase("true"))
+            return "redirect:/home";
+        else{
+            return "redirect:/tasks";
+        }
     }
 
     @GetMapping("task/unmark/{taskId}")
-    public String markTaskAsUnDone(@PathVariable("taskId") int taskId){
+    public String markTaskAsUnDone(@PathVariable("taskId") int taskId, @RequestParam String isHome){
         taskService.markUnDone(taskId);
-        return "redirect:/home";
+
+        if(isHome.equalsIgnoreCase("true"))
+            return "redirect:/home";
+        else{
+            return "redirect:/tasks";
+        }
     }
 
     @GetMapping("task/create")
@@ -87,19 +97,24 @@ public class TaskController {
     }
 
     @GetMapping("/task/delete/{id}")
-    public String deleteTask(@PathVariable int id) {
+    public String deleteTask(@PathVariable int id, @RequestParam String isHome) {
         taskService.deleteTask(id);
-        return "redirect:/home";
+        if(isHome.equalsIgnoreCase("true"))
+            return "redirect:/home";
+        else{
+            return "redirect:/tasks";
+        }
     }
 
     @GetMapping("/task/edit/{id}")
-    public String showFilledTaskForm(@PathVariable int id, Model model) {
+    public String showFilledTaskForm(@PathVariable int id, Model model, @RequestParam String isHome) {
         model.addAttribute("task", taskMapper.taskToTaskDTO(taskService.getTaskById(id)));
+        model.addAttribute("isHome",isHome);
         return "forms/task-edit";
     }
 
     @PostMapping("/task/edit")
-    public String updateTask(@Valid @ModelAttribute("task") TaskDTO taskDTO, BindingResult bindingResult) {
+    public String updateTask(@Valid @ModelAttribute("task") TaskDTO taskDTO, BindingResult bindingResult, @RequestParam String isHome) {
         if (bindingResult.hasErrors()) {
             return "forms/task-edit";
         }
@@ -107,6 +122,10 @@ public class TaskController {
         Task task = taskMapper.taskDTOToTask(taskDTO);
         task.setOwner(user);
         taskService.updateTask(task);
-        return "redirect:/home";
+        if(isHome.equalsIgnoreCase("true"))
+             return "redirect:/home";
+        else{
+            return  "redirect:/tasks";
+        }
     }
 }
