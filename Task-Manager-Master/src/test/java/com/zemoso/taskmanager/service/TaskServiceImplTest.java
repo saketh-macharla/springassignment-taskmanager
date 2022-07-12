@@ -29,7 +29,9 @@ class TaskServiceImplTest {
 
     @Test
     void createTask() {
-        Task newTask =new Task();
+        Users user = new Users(1,"saketh","Saketh","saketh@gmail.com","89373633","test123",(short)1,null,null);
+
+        Task newTask =new Task(1,"Task", "CompleteTask","06-07-2022",false,"ganni",user);
         when(taskRepository.save(newTask)).thenReturn(newTask);
         taskService.createTask(newTask);
         verify(taskRepository,times(1)).save(newTask);
